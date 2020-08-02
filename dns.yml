@@ -1,0 +1,31 @@
+- name: setup all my web server
+  hosts: all
+  vars_prompt: 
+    - name: dnsip
+      prompt: "enter ur dns IP"
+      private: no
+  tasks:
+    - name: copy dns client file
+      template:
+           src: dns.conf.j2
+           dest: /etc/resolv.conf
+      register: x
+      ignore_errors: yes
+
+    - name: checking my above task status 
+      debug:
+             var: x.failed
+
+    - name: run date cmd
+      command: date
+      register: y
+      when: x.failed == false
+
+    - debug:
+             var: y.stdout
+      when: x.failed == false
+
+
+
+
+
