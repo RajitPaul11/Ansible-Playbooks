@@ -1,0 +1,14 @@
+- hosts: localhost
+  vars_files:
+  - var.yml         
+  tasks:
+  - name: Sending an e-mail using Gmail SMTP servers
+    mail:
+      host: smtp.gmail.com
+      port: 587
+      username: "{{uname}}"
+      password: "{{mypass}}"
+      to: Rajit Paul <rajitpaul09@gmail.com>
+      subject: Ansible-report
+      body: System {{ ansible_hostname }} has been successfully provisioned.
+
