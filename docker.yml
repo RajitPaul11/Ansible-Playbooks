@@ -15,27 +15,42 @@
 
   - name: Install Software Python36
     package:
-      name: "python36"
+      name: python36
       state: present
 
   - name: Install Docker Python Library
     pip:
-      name: "docker-py"
+      name: docker-py
+
+  - name: Creating A WorkSpace on MN
+    file:
+      path: /root/AnsibleTask1WebWS
+      state: directory
+
+  - name: Copying Content Into Managed Node
+    copy:
+      src: "index.html"
+      dest: "/root/AnsibleTask1WebWS/"
+    ignore_errors: yes
 
   - name: Starting Docker Service
     service:
-      name: "docker"
+      name: docker
       state: started
 
   - name: pull an image
     docker_image:
-      name: ubuntu:14.04
+      name: httpd
       source: pull
 
   - name: Creating Docker Container
     docker_container:
       name: mywebserveros
-      image: ubuntu:14.04
+      image: httpd
       state: started
       detach: true
-      interactive: true    
+      interactive: true
+      ports:
+      - "1111:80"
+      volumes:
+      - /root/AnsibleTask1WebWS/:/usr/local/apache2/htdocs/    
