@@ -1,0 +1,47 @@
+- hosts: webos
+  tasks: 
+  - name: install httpd package
+    package:
+      name: "httpd"
+      state: present
+    when: ansible_distribution == "RedHat"
+    register: x
+
+  - name: document root dir
+    file:
+      state: directory
+      dest: /var/www/ansibleweb
+    register: y
+    tags: webgit
+
+  - name: conf web server
+    template:
+      dest: /etc/httpd/conf.d/ansibleweb.conf
+      src: templates/localconf.conf.j2
+    when: x.rc == 0
+    tags: webconf
+    notify: service httpd
+
+  - name: copy web page from url
+    get_url:
+      dest: "/var/www/ansibleweb"
+      url: "https://raw.githubusercontent.com/RajitPaul11/AnsiblePlaybook-Configurations/master/index.html"
+      force: yes
+    when: y.failed == false
+    tags: webgit
+
+  handlers:
+  - name: service httpd
+    service:
+      name: httpd
+      state: restarted
+
+  - name: service mysql
+    service: 
+      name: mysqld
+      state: restarted
+  
+  - name: service firewalld
+    service:
+      name: firewalld
+      state: disabled
