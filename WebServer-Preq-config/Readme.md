@@ -1,4 +1,5 @@
 <b><u>Complete Apache WebServer Setup along with making the service module idempotent</u></b>
+<img src="https://syslint.com/wp-content/uploads/2019/04/Installing-Apache-in-Remote-hosts-Using-Ansible-Playbook.jpg" alt="ansibleandapachehttpd">
 <ul>
   <li>Directory Created using file module</li>
   <li>ISO File mounted on the dir using mount module</li>
