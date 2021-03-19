@@ -23,5 +23,5 @@
   <li>Creating a rule for httpd in firewall using the firewalld module</li>
   <p>Creating a rule for the default httpd port - Port 80</p>
   <li>Displaying the ip address of the managed node using the Ansible Facts</li>
-  <p>MN Ip displayed on screen</p>
+  <p>- MN Ip displayed on screen</p>
  </ul>
