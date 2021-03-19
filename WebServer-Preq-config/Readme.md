@@ -3,6 +3,7 @@
 <br /><img src="https://syslint.com/wp-content/uploads/2019/04/Installing-Apache-in-Remote-hosts-Using-Ansible-Playbook.jpg" alt="ansibleandapachehttpd">
 <ul>
   <li>Directory Created using file module</li>
+  <p>Creating a directory on the Managed Node to mount the ISO file</p>
   <li>ISO File mounted on the dir using mount module</li>
   <li>Yum Repos Configured using yum_repository module</li>
   <li>httpd package installed using package module</li>
