@@ -1,0 +1,51 @@
+---
+-  hosts: localhost
+   tasks:
+   - name: Creating Mount Dir
+     file:
+       path: /root/dvd
+       mode: 0555
+       state: directory
+   - name: Mount ISO
+     ansible.posix.mount:
+       path: /root/dvd
+       src: /dev/sr0
+       fstype: iso9660
+       state: mounted
+   - name: Yum Repo Creation I
+     yum_repository:
+       name: Pack1
+       description: Yum AppStream Repo
+       baseurl: /dvd/AppStream
+       gpgcheck: no
+   - name: Yum Repo Creation II
+     yum_repository:
+       name: Pack2
+       description: Yum BaseOS Repo
+       baseurl: /dvd/BaseOS
+       gpgcheck: no
+   - name: Installing HTTPD Package
+     package:
+       name: httpd
+       state: present
+   - name: Copy WebPage to DR
+     copy: 
+       src: index.html
+       dest: /var/www/html
+     register: x
+   - debug:
+       var: x
+   - name: Starting HTTPD Service
+     service:
+       name: httpd
+       state: restarted
+     when: x.changed == true
+   - name: Allowing Firewall
+     ansible.posix.firewalld:
+       port: 80/tcp
+       permanent: yes
+       state: enabled
+   - name: Ansible Facts
+     ansible.builtin.debug:
+       var:  ansible_facts.enp0s3.ipv4.address
+...
