@@ -1,4 +1,4 @@
-<b><u>Complete Apache WebServer Setup along with making the service module Idempotent</u></b>
+<b><u>Complete Apache WebServer Setup along with making the service module idempotent</u></b>
 <ul>
   <li>Directory Created using file module</li>
   <li>ISO File mounted on the dir using mount module</li>
