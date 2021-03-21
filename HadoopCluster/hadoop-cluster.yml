@@ -1,0 +1,66 @@
+---
+- hosts: all
+  vars_prompt:
+    name: nnip
+    prompt: Please enter the IP of NameNode
+    private: no
+  tasks:
+    - name: Create a workspace
+      file:
+        path: /root/hadoop
+        state: directory
+    - name: Copy the Java RPM Package
+      copy:
+        src: jdk-8u171-linux-x64.rpm
+        dest: /root/hadoop
+    - name: Copy the Hadoop RPM Package
+      copy:
+        src: hadoop-1.2.1-1.x86_64.rpm
+        dest: /root/hadoop
+    - name: Install JDK
+      yum:
+        name: /root/hadoop/jdk-8u171-linux-x64.rpm
+        state: present
+        disable_gpg_check: yes
+    - name: Install Hadoop
+      command: rpm -ivh /root/hadoop/hadoop-1.2.1-1.x86_64.rpm --force
+    - name: Create NameNode Dir
+      file:
+        path: /nn
+        state: directory
+      when: inventory_hostname in groups["nn"]
+      register: x
+    - name: Create DataNode Dir
+      file:
+        path: /dn
+        state: directory
+      when: inventory_hostname in groups["dn"]
+    - name: Configure hdfs-site.xml
+      blockinfile:
+        path: /etc/hadoop/hdfs-site.xml
+        insertafter: "<configuration>"
+        block: |
+          <property>
+          <name>dfs.name.dir</name>
+          <value>/nn</value>
+          </property>
+      when: inventory_hostname in groups["nn"]
+    - name: Configure core-site.xml
+      blockinfile:
+        path: /etc/hadoop/core-site.xml
+        insertafter: "<configuration>"
+        block: |
+          <property>
+          <name>fs.default.name</name>
+          <value>hdfs://{{ nnip }}:9001</value>
+          </property>
+    - name: Format NameNode
+      command: hadoop namenode -format -Y
+      when: inventory_hostname in groups["nn"] and x.changed == true
+    - name: Start NameNode Service
+      command: hadoop-daemon.sh start namenode
+      when: inventory_hostname in groups["nn"]
+    - name: Start DataNode Service
+      command: hadoop-daemon.sh start datanode
+      when: inventory_hostname in groups["dn"]
+

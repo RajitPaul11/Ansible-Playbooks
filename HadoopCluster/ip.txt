@@ -1,0 +1,7 @@
+[nn]
+192.168.29.228 ansible_user=mickey ansible_ssh_pass=redhat ansible_become_pass=redhat
+
+[dn]
+192.168.29.155 ansible_user=root ansible_ssh_pass=redhat 
+
+
