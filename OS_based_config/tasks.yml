@@ -1,0 +1,14 @@
+- name: Install package {{ package }}
+  package:
+    name: "{{ package }}"
+
+- name: Copy the content to MN
+  copy:
+    src: "{{ file }}"
+    dest: "{{ destination }}"
+
+- name: Start {{ package }} service
+  service: 
+    name: "{{ service }}"
+    state: "{{ state }}"
+

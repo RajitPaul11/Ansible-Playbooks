@@ -1,0 +1,6 @@
+package: httpd
+state: started
+service: httpd
+file: index.html
+destination: /var/www/html
+

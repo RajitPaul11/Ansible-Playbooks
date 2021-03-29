@@ -1,0 +1,16 @@
+---
+- hosts: rhel8
+  vars_files:
+    - redhat.yml
+  tasks:
+    - name: Read the RedHat Tasks.yml
+      include: tasks.yml
+
+- hosts: ubuntu
+  vars_files:
+    - ubuntu.yml
+  tasks:
+    - name: Read the Ubuntu Tasks.yml
+      include: tasks.yml
+...
+

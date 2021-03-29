@@ -1,0 +1,8 @@
+[rhel8]
+192.168.29.202 ansible_user=tom ansible_ssh_pass=redhat ansible_become_pass=redhat
+192.168.29.180 ansible_user=root ansible_ssh_pass=redhat
+
+[ubuntu]
+192.168.29.228 ansible_user=Tesla ansible_ssh_pass=redhat ansible_become_pass=redhat
+
+
