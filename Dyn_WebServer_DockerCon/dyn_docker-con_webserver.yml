@@ -1,0 +1,60 @@
+---
+- hosts: localhost
+  tasks:
+    - name: Install Python36
+      package:
+        name: python36
+        state: present
+    - name: Install Docker Python Library
+      pip:
+        name: docker-py
+    - name: Starting Docker service
+      service:
+        name: docker
+        state: started
+    - name: Pull an image
+      docker_image:
+        name: submar1n3/openssh:v1
+        source: pull
+    - name: Launch SSH Docker container
+      docker_container:
+        name: ssh_con
+        image: submar1n3/openssh:v1
+        state: started
+        detach: true
+        interactive: true
+        ports:
+        - "2222:22"
+        - "8888:80"
+    - name: Get Docker info
+      docker_container_info:
+        name: ssh_con
+      register: result
+    - name: Print IP of Container
+      debug:
+        msg: "{{ result.container.NetworkSettings.IPAddress }}"
+    - name: Insert IP into inventory
+      blockinfile:
+        path: ip.txt
+        insertafter: "<docker>"
+        block: |
+          "{{ result.container.NetworkSettings.IPAddress }}" ansible_ssh_user=root ansible_ssh_pass=redhat
+- hosts: docker
+  tasks:
+    - name: Installing HTTPD Package
+      package:
+        name: httpd
+        state: present
+    - name: Copy WebPage to DR
+      copy:
+        src: index.html
+        dest: /var/www/html
+      register: x
+    - name: Starting HTTPD Service
+      shell: /usr/sbin/httpd
+      when: x.changed == true
+    - name: Ansible Facts
+      debug:
+        var:  ansible_facts.eth0.ipv4.address
+
+
